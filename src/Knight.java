@@ -22,15 +22,14 @@ public class Knight extends Hero {
         return phrases[(int)(Math.random() * phrases.length)];
     }
 
-    private boolean usedSkill = false;
-    public void useSkill(Hero[] heroes, int attackerIndex, Scanner scanner) {
-        if (usedSkill) {
-            System.out.println(getName() + " has already used Shield Bash!");
-            return;
+    public boolean useSkill(Hero[] heroes, int attackerIndex, Scanner scanner) {
+        if (!isSkillReady()) {
+            System.out.println(getName() + "'s Shield Bash is still on cooldown for " + skillCooldown + " turn(s)!");
+            return false;
         }
 
         Hero target = selectTarget(heroes, attackerIndex, scanner);
-        if (target == null) return;
+        if (target == null) return false;
         String flavor = getName() + " slams their shield into " + target.getName() + "!";
         System.out.println(Main.wrapFlavor(">>> " + flavor, Main.CYAN));
         int damage = getAttackPower();
@@ -41,7 +40,8 @@ public class Knight extends Hero {
             System.out.println(target.getName() + " is stunned and will miss their next turn!");
         }
 
-        //usedSkill = true;
+        startCooldown();
+        return true;
     }
 
 }

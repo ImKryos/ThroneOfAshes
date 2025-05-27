@@ -122,7 +122,7 @@ public abstract class Hero {
         System.out.println();
     }
 
-    public abstract void useSkill(Hero[] heroes, int attackerIndex, Scanner scanner);
+    public abstract boolean useSkill(Hero[] heroes, int attackerIndex, Scanner scanner);
 
     public int getAttackPower() {
         return this.attackPower;
@@ -179,6 +179,23 @@ public abstract class Hero {
                 scanner.nextLine(); // clear bad input
             }
         }
+    }
+
+    protected int skillCooldown = 0;
+    protected final int maxSkillCooldown = 3;
+
+    public boolean isSkillReady() {
+        return skillCooldown == 0;
+    }
+
+    public void reduceCooldown() {
+        if (skillCooldown > 0) {
+            skillCooldown--;
+        }
+    }
+
+    public void startCooldown() {
+        skillCooldown = maxSkillCooldown;
     }
 
 }

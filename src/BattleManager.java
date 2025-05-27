@@ -51,7 +51,10 @@ public class BattleManager {
      * @param playerIndex the index of the player in the heroes array
      * @param attacker the Hero object representing the attacking player
      */
+
+
     private void playerTurn(int playerIndex, Hero attacker) {
+        attacker.reduceCooldown();
         Main.pause(1000);
         System.out.println("Your turn! Choose an action: ");
 
@@ -110,7 +113,64 @@ public class BattleManager {
             executeAttack(attacker, target);
 
         } else {
-            attacker.useSkill(heroes, playerIndex, scanner);
+            boolean skillUsedSuccessfully = false;
+            while (!skillUsedSuccessfully) {
+                skillUsedSuccessfully = attacker.useSkill(heroes, playerIndex, scanner);
+
+                if (!skillUsedSuccessfully) {
+                    System.out.println("Skill could not be used. Please choose a different action:");
+                    System.out.println("1. Try skill again");
+                    System.out.println("2. Basic attack");
+
+                    int retryChoice = 0;
+                    while (true) {
+                        System.out.print("Enter your choice: ");
+                        try {
+                            retryChoice = scanner.nextInt();
+                            scanner.nextLine();
+                            if (retryChoice == 1 || retryChoice == 2) break;
+                            else System.out.println("Please enter 1 or 2.");
+                        } catch (InputMismatchException e) {
+                            System.out.println("Invalid input. Please enter a number.");
+                            scanner.nextLine();
+                        }
+                    }
+
+                    if (retryChoice == 2) {
+                        System.out.println("Choose a target to attack: ");
+                        int option = 1;
+                        int[] validTargets = new int[heroes.length];
+
+                        for (int index = 0; index < heroes.length; index++) {
+                            if (index != playerIndex && heroes[index].isAlive()) {
+                                System.out.println(option + ". " + heroes[index].getName());
+                                validTargets[option - 1] = index;
+                                option++;
+                            }
+                        }
+
+                        int targetIndex;
+                        while (true) {
+                            System.out.print("Enter your tarter: ");
+                            try {
+                                int chosen = scanner.nextInt();
+                                if (chosen < 1 || chosen >= option) {
+                                    System.out.println("Invalid choice. Please choose a number between 1 and " + (option - 1));
+                                    continue;
+                                }
+                                targetIndex = validTargets[chosen - 1];
+                                break;
+                            } catch (InputMismatchException e) {
+                                System.out.println("Invalid input. Please enter a number.");
+                                scanner.nextLine();
+                            }
+                        }
+
+                        Hero target = heroes[targetIndex];
+                        executeAttack(attacker, target);
+                    }
+                }
+            }
         }
     }
 
@@ -124,6 +184,7 @@ public class BattleManager {
      * @param attacker the Hero object representing the attacking AI
      */
     private void aiTurn(int aiIndex, Hero attacker) {
+        attacker.reduceCooldown();
 
         if (attacker.isStunned()) {
             System.out.println(attacker.getName() + " is stunned and skips their turn!");
