@@ -4,6 +4,7 @@ public class Mage extends Hero {
 
     public Mage(String name) {
         super(name, 90, 10);
+        setMaxSkillCooldown(4);
     }
 
     public void attack(Hero target) {
@@ -22,8 +23,26 @@ public class Mage extends Hero {
     }
 
     @Override
-    public void useSkill(Hero[] heroes, int attackerIndex, Scanner scanner) {
+    public boolean useSkill(Hero[] heroes, int attackerIndex, Scanner scanner) {
+        if (!isSkillReady()) {
+            System.out.println(getName() + "'s Ice Blast is still on cooldown for " + skillCooldown + " turn(s)!");
+            return false;
+        }
 
+        Hero target = selectTarget(heroes, attackerIndex, scanner);
+        if (target == null) return false;
+        String flavor = getName() + " invokes an Ice Blast, sending icicles flying into " + target.getName() + "!";
+        System.out.println(Main.wrapFlavor(">>> " + flavor, Main.CYAN));
+        int damage = getAttackPower();
+        target.takeDamage(damage + getAttackPower());
+
+        if (Math.random() < 0.5) {
+            System.out.println(getName() + " triggers a double cast!");
+            target.takeDamage(damage + getAttackPower());
+        }
+
+        startCooldown();
+        return true;
     }
 
 }

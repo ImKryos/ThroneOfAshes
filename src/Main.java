@@ -43,7 +43,8 @@ public class Main {
 
     // ─── LAUNCH GAME METHOD  ─────────────────────────
     public static void launchGame() {
-
+        GameLauncher launcher = new GameLauncher();
+        launcher.clearScreen();
         // Setup scanner for player input
         Scanner scanner = new Scanner(System.in);
 

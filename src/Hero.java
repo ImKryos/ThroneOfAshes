@@ -116,7 +116,9 @@ public abstract class Hero {
                 interpolatedHealth = 0;
             }
 
-            System.out.print("\r" + getHpBar(interpolatedHealth));
+            String bar = getHpBar(interpolatedHealth);
+            String paddedBar = String.format("\r%-40s", bar);
+            System.out.print(paddedBar);
             Main.pause(delay);
         }
         System.out.println();
@@ -182,7 +184,11 @@ public abstract class Hero {
     }
 
     protected int skillCooldown = 0;
-    protected final int maxSkillCooldown = 3;
+    protected int maxSkillCooldown;
+
+    public void setMaxSkillCooldown(int turns) {
+        this.maxSkillCooldown = turns;
+    }
 
     public boolean isSkillReady() {
         return skillCooldown == 0;

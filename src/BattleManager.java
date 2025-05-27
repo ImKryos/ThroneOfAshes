@@ -51,8 +51,6 @@ public class BattleManager {
      * @param playerIndex the index of the player in the heroes array
      * @param attacker the Hero object representing the attacking player
      */
-
-
     private void playerTurn(int playerIndex, Hero attacker) {
         attacker.reduceCooldown();
         Main.pause(1000);
@@ -168,6 +166,7 @@ public class BattleManager {
 
                         Hero target = heroes[targetIndex];
                         executeAttack(attacker, target);
+                        skillUsedSuccessfully = true;
                     }
                 }
             }

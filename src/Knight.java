@@ -4,6 +4,7 @@ public class Knight extends Hero {
 
     public Knight(String name) {
         super(name, 120, 25);
+        setMaxSkillCooldown(3);
     }
 
     @Override
@@ -22,6 +23,7 @@ public class Knight extends Hero {
         return phrases[(int)(Math.random() * phrases.length)];
     }
 
+    @Override
     public boolean useSkill(Hero[] heroes, int attackerIndex, Scanner scanner) {
         if (!isSkillReady()) {
             System.out.println(getName() + "'s Shield Bash is still on cooldown for " + skillCooldown + " turn(s)!");
